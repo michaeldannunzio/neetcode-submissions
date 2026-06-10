@@ -1,0 +1,29 @@
+from collections import Counter
+
+class Solution:
+    def isValidSudoku(self, board: list[list[str]]) -> bool:
+        rows = lambda r: board[i]
+        cols = lambda c: [r[c] for r in board]
+        def squares(s: int) -> list[list[str]]:
+            r = (s // 3) * 3
+            c = (s % 3) * 3
+            return [b[c:c+3] for b in board[r:r+3]]
+        flat_square = lambda s: [v for l in squares(s) for v in l]
+        def sudoku_counter(l: list[str]) -> Counter:
+            counter = Counter(l)
+            if '.' in counter:
+                del counter['.']
+            return counter
+
+        for i in range(9):
+            row = rows(i)
+            col = cols(i)
+            sq = flat_square(i)
+
+            counters = [sudoku_counter(l) for l in [row,col,sq]]
+            print(counters)
+            for counter in counters:
+                if counter and counter.most_common()[0][1] > 1:
+                    return False
+
+            return True
